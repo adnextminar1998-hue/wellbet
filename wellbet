@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WELLBET — Sports Demo</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    :root {
+      --bg: #090d12;
+      --panel: #11171e;
+      --panel2: #171e27;
+      --border: #242d37;
+      --text: #f4f7f9;
+      --muted: #8d99a6;
+      --green: #b7f34a;
+      --green-dark: #8fc62d;
+      --red: #ff6262;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    /* HEADER */
+    header {
+      height: 70px;
+      background: #0c1117;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .logo {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--green);
+      margin-right: 45px;
+    }
+
+    nav {
+      display: flex;
+      gap: 28px;
+      flex: 1;
+    }
+
+    nav a {
+      color: #aab4bf;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    nav a.active,
+    nav a:hover {
+      color: var(--green);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .login {
+      background: transparent;
+      color: white;
+      border: 1px solid var(--border);
+      padding: 11px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .register {
+      background: var(--green);
+      color: #101500;
+      padding: 11px 20px;
+      border-radius: 8px;
+      font-weight: 800;
+    }
+
+    /* LAYOUT */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr 310px;
+      gap: 18px;
+      max-width: 1500px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      height: fit-content;
+    }
+
+    .sidebar-title {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 10px 12px;
+    }
+
+    .sport {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      color: #b9c2ca;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .sport:hover,
+    .sport.selected {
+      background: #1c252f;
+      color: var(--green);
+    }
+
+    .sport-icon {
+      width: 28px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 290px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      background:
+        radial-gradient(circle at 80% 30%, #31431b 0%, transparent 35%),
+        linear-gradient(120deg, #19231c, #10161c 65%);
+      border: 1px solid var(--border);
+    }
+
+    .hero-content {
+      max-width: 580px;
+    }
+
+    .demo-label {
+      display: inline-block;
+      background: rgba(183, 243, 74, .13);
+      border: 1px solid rgba(183, 243, 74, .25);
+      color: var(--green);
+      padding: 6px 10px;
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: 39px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .hero-btn {
+      background: var(--green);
+      color: #101500;
+      padding: 12px 20px;
+      border-radius: 7px;
+      font-weight: 800;
+    }
+
+    /* MATCHES */
+    .section {
+      margin-top: 22px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .section-heading h2 {
+      font-size: 18px;
+    }
+
+    .view {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .match-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 16px;
+      margin-bottom: 9px;
+    }
+
+    .match-top {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 14px;
+    }
+
+    .live {
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .teams {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .team {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .team:first-child {
+      text-align: left;
+    }
+
+    .team:last-child {
+      text-align: right;
+    }
+
+    .score {
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .odds {
+      display: flex;
+      gap: 7px;
+      margin-top: 15px;
+    }
+
+    .odd {
+      flex: 1;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      padding: 9px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 11px;
+    }
+
+    .odd strong {
+      display: block;
+      color: var(--green);
+      margin-top: 3px;
+    }
+
+    /* RIGHT PANEL */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 17px;
+    }
+
+    .box h3 {
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+
+    .league {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .league:last-child {
+      border-bottom: 0;
+    }
+
+    .league span {
+      color: var(--muted);
+    }
+
+    /* NEWS */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .news {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .news small {
+      color: var(--green);
+      font-size: 10px;
+    }
+
+    .news h3 {
+      font-size: 14px;
+      line-height: 1.4;
+      margin-top: 7px;
+    }
+
+    .news p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+      margin-top: 7px;
+    }
+
+    /* MOBILE */
+    .mobile-nav {
+      display: none;
+    }
+
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 190px 1fr;
+      }
+
+      .right-panel {
+        display: none;
+      }
+    }
+
+    @media (max-width: 700px) {
+      header {
+        padding: 0 15px;
+        height: 62px;
+      }
+
+      .logo {
+        margin-right: auto;
+        font-size: 23px;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .login {
+        display: none;
+      }
+
+      .register {
+        padding: 9px 13px;
+        font-size: 12px;
+      }
+
+      .layout {
+        display: block;
+        padding: 12px;
+        padding-bottom: 75px;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .hero {
+        min-height: 260px;
+        padding: 24px;
+      }
+
+      .hero h1 {
+        font-size: 29px;
+      }
+
+      .news-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 62px;
+        background: #0d1319;
+        border-top: 1px solid var(--border);
+        z-index: 30;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .mobile-nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 10px;
+        text-align: center;
+      }
+
+      .mobile-nav a.active {
+        color: var(--green);
+      }
+
+      .mobile-nav span {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 3px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">WELLBET</div>
+
+    <nav>
+      <a href="#" class="active">Sports</a>
+      <a href="#">Live</a>
+      <a href="#">Football</a>
+      <a href="#">Cricket</a>
+      <a href="#">Basketball</a>
+      <a href="#">News</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="login">Sign in</button>
+      <button class="register">Join Demo</button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-title">Sports</div>
+
+      <div class="sport selected">
+        <span class="sport-icon">⚽</span>
+        Football
+      </div>
+
+      <div class="sport">
+        <span class="sport-icon">🏏</span>
+        Cricket
+      </div>
+
+      <div class="sport">
+        <span class="sport-icon">🏀</span>
+        Basketball
+      </div>
+
+      <div class="sport">
+        <span class="sport-icon">🎾</span>
+        Tennis
+      </div>
+
+      <div class="sport">
+        <span class="sport-icon">🏎️</span>
+        Motorsport
+      </div>
+
+      <div class="sport">
+        <span class="sport-icon">🏐</span>
+        Volleyball
+      </div>
+
+      <div class="sidebar-title">Popular</div>
+
+      <div class="sport">
+        <span class="sport-icon">🔥</span>
+        Top Matches
+      </div>
+
+      <div class="sport">
+        <span class="sport-icon">⭐</span>
+        Favorites
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <section>
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-content">
+          <div class="demo-label">SPORTS DEMO PLATFORM</div>
+
+          <h1>
+            Follow the game.<br>
+            Feel every moment.
+          </h1>
+
+          <p>
+            Explore live scores, upcoming fixtures, league tables
+            and simulated match data in one modern sports dashboard.
+          </p>
+
+          <button class="hero-btn" onclick="scrollToMatches()">
+            Explore Matches
+          </button>
+        </div>
+      </div>
+
+      <!-- LIVE MATCHES -->
+      <div class="section" id="matches">
+
+        <div class="section-heading">
+          <h2>🔴 Live & Featured</h2>
+          <span class="view">View all</span>
+        </div>
+
+        <div class="match-card">
+
+          <div class="match-top">
+            <span>International Friendly</span>
+            <span class="live">● LIVE 68'</span>
+          </div>
+
+          <div class="teams">
+            <div class="team">North City FC</div>
+            <div class="score">2 — 1</div>
+            <div class="team">United Stars</div>
+          </div>
+
+          <div class="odds">
+            <div class="odd">
+              Home
+              <strong>1.72 DEMO</strong>
+            </div>
+
+            <div class="odd">
+              Draw
+              <strong>3.40 DEMO</strong>
+            </div>
+
+            <div class="odd">
+              Away
+              <strong>4.25 DEMO</strong>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="match-card">
+
+          <div class="match-top">
+            <span>Premier League — Demo</span>
+            <span>20:30</span>
+          </div>
+
+          <div class="teams">
+            <div class="team">Royal London</div>
+            <div class="score">VS</div>
+            <div class="team">Manchester Blue</div>
+          </div>
+
+          <div class="odds">
+            <div class="odd">
+              Home
+              <strong>2.05 DEMO</strong>
+            </div>
+
+            <div class="odd">
+              Draw
+              <strong>3.15 DEMO</strong>
+            </div>
+
+            <div class="odd">
+              Away
+              <strong>3.60 DEMO</strong>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="match-card">
+
+          <div class="match-top">
+            <span>International Cricket — Demo</span>
+            <span>Tomorrow</span>
+          </div>
+
+          <div class="teams">
+            <div class="team">Bangladesh XI</div>
+            <div class="score">T20</div>
+            <div class="team">India XI</div>
+          </div>
+
+          <div class="odds">
+            <div class="odd">
+              Team 1
+              <strong>1.85 DEMO</strong>
+            </div>
+
+            <div class="odd">
+              Draw
+              <strong>12.00 DEMO</strong>
+            </div>
+
+            <div class="odd">
+              Team 2
+              <strong>1.95 DEMO</strong>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- NEWS -->
+      <div class="section">
+
+        <div class="section-heading">
+          <h2>Latest Sports</h2>
+          <span class="view">More news</span>
+        </div>
+
+        <div class="news-grid">
+
+          <article class="news">
+            <small>FOOTBALL</small>
+            <h3>European clubs prepare for another exciting weekend</h3>
+            <p>
+              Teams are finalizing their squads ahead of the upcoming
+              fixtures.
+            </p>
+          </article>
+
+          <article class="news">
+            <small>CRICKET</small>
+            <h3>New season brings fresh competition</h3>
+            <p>
+              International cricket returns with several highly
+              anticipated matchups.
+            </p>
+          </article>
+
+          <article class="news">
+            <small>BASKETBALL</small>
+            <h3>Playoff race enters its decisive stage</h3>
+            <p>
+              Several teams remain close in the league standings.
+            </p>
+          </article>
+
+          <article class="news">
+            <small>TENNIS</small>
+            <h3>Top seeds advance through opening rounds</h3>
+            <p>
+              The tournament continues with another day of action.
+            </p>
+          </article>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT PANEL -->
+    <aside class="right-panel">
+
+      <div class="box">
+
+        <h3>🏆 Popular Leagues</h3>
+
+        <div class="league">
+          <b>Premier League</b>
+          <span>24 matches</span>
+        </div>
+
+        <div class="league">
+          <b>La Liga</b>
+          <span>18 matches</span>
+        </div>
+
+        <div class="league">
+          <b>Champions League</b>
+          <span>12 matches</span>
+        </div>
+
+        <div class="league">
+          <b>International</b>
+          <span>31 matches</span>
+        </div>
+
+      </div>
+
+      <div class="box">
+
+        <h3>🔥 Trending Today</h3>
+
+        <div class="league">
+          <b>North City FC</b>
+          <span>+18%</span>
+        </div>
+
+        <div class="league">
+          <b>India XI</b>
+          <span>+14%</span>
+        </div>
+
+        <div class="league">
+          <b>Royal London</b>
+          <span>+11%</span>
+        </div>
+
+        <div class="league">
+          <b>United Stars</b>
+          <span>+9%</span>
+        </div>
+
+      </div>
+
+      <div class="box">
+
+        <h3>ℹ️ Demo Notice</h3>
+
+        <p style="
+          color:#8d99a6;
+          font-size:12px;
+          line-height:1.7;
+        ">
+          WELLBET is a sports interface demonstration.
+          All displayed odds and match information are simulated
+          and have no monetary value.
+        </p>
+
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav">
+    <a href="#" class="active">
+      <span>🏠</span>
+      Home
+    </a>
+
+    <a href="#matches">
+      <span>⚽</span>
+      Sports
+    </a>
+
+    <a href="#">
+      <span>🔴</span>
+      Live
+    </a>
+
+    <a href="#">
+      <span>⭐</span>
+      Favorites
+    </a>
+
+    <a href="#">
+      <span>👤</span>
+      Account
+    </a>
+  </div>
+
+  <script>
+    function scrollToMatches() {
+      document
+        .getElementById("matches")
+        .scrollIntoView({
+          behavior: "smooth"
+        });
+    }
+
+    // Demo sport selector
+    document.querySelectorAll(".sport").forEach(item => {
+      item.addEventListener("click", () => {
+
+        document
+          .querySelectorAll(".sport")
+          .forEach(s => s.classList.remove("selected"));
+
+        item.classList.add("selected");
+      });
+    });
+  </script>
+
+</body>
+</html>
